@@ -7,11 +7,12 @@
 
 
 #include "DATA_WORD.h"
-#include <iostream>>
+#include <iostream>
+#include <stdexcept>
 
 class S2MM_1ST_WORD : public DATA_WORD{
 private:
-    unsigned char head[4];
+    std::array<unsigned char,4> head;
     unsigned char crcVerfyReslt;
     unsigned char evm;
     unsigned int decoderAccuNum;
@@ -28,10 +29,10 @@ private:
 
 public:
     S2MM_1ST_WORD();
-    S2MM_1ST_WORD(unsigned char payload[8]);
+    S2MM_1ST_WORD(std::array<unsigned char,8> payload);
 
-    unsigned char * getHead();
-    void setHead(unsigned char * headToSet);
+    std::array<unsigned char, 4> getHead();
+    void setHead(std::array<unsigned char, 4> headToSet);
 
     unsigned char getCrcVrRs();
     void setCrcVrRs(char crcVrRs);
@@ -53,7 +54,6 @@ public:
 
     unsigned int getEncoderNum();
     void setEncoderNum(unsigned int encoderNum);
-
 };
 
 

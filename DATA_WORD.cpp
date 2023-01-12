@@ -6,19 +6,72 @@
 #include <iostream>
 #include "DATA_WORD.h"
 
+//TODO:重构一下,两个payload还有成员变量之间的关系有点乱
+
 DATA_WORD::DATA_WORD() {}
 
-DATA_WORD::DATA_WORD(unsigned char payload[8]){
-    memcpy(this->payload,payload, sizeof(this->payload));
+//DATA_WORD::DATA_WORD(unsigned char payload[8]){
+DATA_WORD::DATA_WORD(std::array<unsigned char,8> payload){
+//    memcpy(this->payload,payload, sizeof(this->payload));
+    this->payload = payload;
     setPayloadInBit();
 }
 
-unsigned char * DATA_WORD::getPayLoad(){
+//unsigned char * DATA_WORD::getPayLoad(){
+std::array<unsigned char, 8> DATA_WORD::getPayload(){
+    syncBitPayload();
     return this->payload;
 }
 
-void DATA_WORD::setPayLoad(unsigned char * payloadToSet){
-    memcpy(this->payload,payloadToSet,sizeof(payload));
+//void DATA_WORD::setPayLoad(unsigned char * payloadToSet){
+void DATA_WORD::setPayload(std::array<unsigned char, 8> payload){
+//    memcpy(this->payload,payloadToSet,sizeof(payload));
+    this->payload = payload;
+    setPayloadInBit();
+}
+
+//unsigned char * DATA_WORD::getPayloadInBit(){
+std::array<unsigned char, 64> DATA_WORD::getPayloadInBit(){
+    return this->payloadInBit;
+}
+
+void DATA_WORD::setPayloadInBit(){
+    int itPayBit = 0;
+    for(int i = 0; i<(PAYLOAD_LEN_BIT/8); ++i){
+        unsigned char itPay = payload[i];
+        for(int j = 0; j<sizeof(char);j++){
+            unsigned char inter = itPay & 0x01;
+            payloadInBit[itPayBit] = inter;
+            itPay = itPay >> 1;
+        }
+    }
+}
+
+void DATA_WORD::syncBitPayload(){
+    for(int i = 0; i<8;++i){
+        unsigned char inter = 0;
+        for(int j = 0; j<8;++j){
+            inter = inter << 1;
+            inter = inter +(this->payloadInBit[i*8+j]);
+        }
+        this->payload[i] = inter;
+    }
+}
+
+void DATA_WORD::setPayloadInBit(std::array<unsigned char, 64> payload){
+    //64转到一个8byte中赋值给payload变量,然后调用setPayloadInBit()
+    for(int i = 0; i<(PAYLOAD_LEN_BIT/8);++i){
+        unsigned char inter = 0;
+
+        for(int j = 0; j<sizeof(char); ++j){
+            inter = inter << 1;
+            inter = inter+(payload[i*8 + j]&1);
+        }
+
+        this->payload[i] = inter;
+    }
+
+    setPayloadInBit();
 }
 
 unsigned char * DATA_WORD::getPayloadBitData(int begin, int end){
@@ -81,25 +134,3 @@ unsigned char * DATA_WORD::getPayloadBitData(int begin, int end){
 void DATA_WORD::setPayloadBitData(unsigned char * toSet, int begin, int end){
 
 }
-
-unsigned char * DATA_WORD::getPayloadInBit(){
-    return this->payloadInBit;
-}
-
-void DATA_WORD::setPayloadInBit(){
-    int itPayBit = 0;
-    for(int i = 0; i<(PAYLOAD_LEN_BIT/8); ++i){
-        unsigned char itPay = payload[i];
-        for(int j = 0; j<sizeof(char);j++){
-            unsigned char inter = itPay & 0x01;
-            payloadInBit[itPayBit] = inter;
-            itPay = itPay >> 1;
-        }
-    }
-}
-
-void DATA_WORD::setPayloadInBit(unsigned char * payload){
-    setPayLoad(payload);
-    setPayloadInBit();
-}
-

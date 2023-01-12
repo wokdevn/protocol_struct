@@ -24,12 +24,17 @@ public:
 //    unsigned char * getPayLoad();
     std::array<unsigned char, 8> getPayload();
 
-    void setPayLoad(unsigned char * payloadToSet);
+//    void setPayLoad(unsigned char * payloadToSet);
+    void setPayload(std::array<unsigned char, 8>);
 
-    unsigned char * getPayloadInBit();
+//    unsigned char * getPayloadInBit();
+    std::array<unsigned char, 64> getPayloadInBit();
 
     void setPayloadInBit();
-    void setPayloadInBit(unsigned char * payloadInBitToSet);
+//    void setPayloadInBit(unsigned char * payloadInBitToSet);
+    void setPayloadInBit(std::array<unsigned char, 64>);
+
+    void syncBitPayload();
 
     //下面两个函数的begin和end之间的数据是连续的,并且是按bit来定的位置
     //下面两个函数写一半,换了种实现方案,没有写完

@@ -20,7 +20,8 @@
 
 class MM2S_1ST_WORD : public DATA_WORD {
 private:
-    unsigned char head[4];
+//    unsigned char head[4];
+    std::array<unsigned char,4> head;
     unsigned char modulation;
     unsigned int encoderMb;
     unsigned int encoderNum;
@@ -49,10 +50,11 @@ private:
 //    modulType modulationType;
 
 public:
-    MM2S_1ST_WORD(unsigned char payload[8]);
+//    MM2S_1ST_WORD(unsigned char payload[8]);
+    MM2S_1ST_WORD(std::array<unsigned char,8> payload);
 
-    unsigned char * getHead();
-    void setHead(unsigned char * headToSet);
+    std::array<unsigned char,4> getHead();
+    void setHead(std::array<unsigned char,4> headToSet);
 
     unsigned char getModulation();
     void setModulation(char modulation);
